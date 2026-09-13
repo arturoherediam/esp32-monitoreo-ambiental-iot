@@ -1,0 +1,365 @@
+[
+    {
+        "id": "8f88068014262b5c",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "56068ec7df0f16b8",
+        "type": "inject",
+        "z": "8f88068014262b5c",
+        "name": "simular_lectura",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 230,
+        "y": 560,
+        "wires": [
+            [
+                "79c7181cccbd055d"
+            ]
+        ]
+    },
+    {
+        "id": "79c7181cccbd055d",
+        "type": "function",
+        "z": "8f88068014262b5c",
+        "name": "generar_datos_simulados",
+        "func": "msg.payload = \n{ \n    temp: +(20 + Math.random()*10).toFixed(1), \n    hum: +(40 + Math.random()*30).toFixed(1), \n    pres: +(1000 + Math.random()*30).toFixed(1), \n    iaq: Math.floor(Math.random()*150) \n}; \nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 230,
+        "y": 640,
+        "wires": [
+            [
+                "62cd10f1ea738d70",
+                "eba551661ee05a54",
+                "4564abc43e5559a9",
+                "f5cf513eecd07e4b",
+                "2412af6ad36c0710"
+            ]
+        ]
+    },
+    {
+        "id": "62cd10f1ea738d70",
+        "type": "ui-gauge",
+        "z": "8f88068014262b5c",
+        "name": "Temperatura",
+        "group": "0942303a585edd6d",
+        "order": 3,
+        "value": "payload.temp",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Temperatura",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "°C",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "35",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "42",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "50",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 490,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "eba551661ee05a54",
+        "type": "ui-gauge",
+        "z": "8f88068014262b5c",
+        "name": "Humedad",
+        "group": "0942303a585edd6d",
+        "order": 2,
+        "value": "payload.hum",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Humedad",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "%",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#3584e4",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": "0",
+        "max": "100",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 480,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4564abc43e5559a9",
+        "type": "ui-gauge",
+        "z": "8f88068014262b5c",
+        "name": "Calidad de aire (IAQ)",
+        "group": "0942303a585edd6d",
+        "order": 1,
+        "value": "payload.iaq",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Calidad de aire (IAQ)",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "IAQ",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#c061cb",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "300",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 520,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f5cf513eecd07e4b",
+        "type": "ui-text",
+        "z": "8f88068014262b5c",
+        "group": "0942303a585edd6d",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "name": "Presion",
+        "label": "hPa",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": true,
+        "font": "",
+        "fontSize": "30",
+        "color": "#241f31",
+        "wrapText": false,
+        "className": "",
+        "value": "payload.pres",
+        "valueType": "msg",
+        "x": 480,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "2412af6ad36c0710",
+        "type": "ui-chart",
+        "z": "8f88068014262b5c",
+        "group": "0942303a585edd6d",
+        "name": "Tendencia Temperatura",
+        "label": "Tendencia Temperatura",
+        "order": 9007199254740991,
+        "chartType": "line",
+        "category": "Temperatura",
+        "categoryType": "str",
+        "xAxisLabel": "Tiempo",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload.temp",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "50",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": "10",
+        "removeOlderUnit": "60",
+        "removeOlderPoints": "",
+        "colors": [
+            "#ffa348",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 530,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0942303a585edd6d",
+        "type": "ui-group",
+        "name": "Ambiente",
+        "page": "06afa48dc3702ec2",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "06afa48dc3702ec2",
+        "type": "ui-page",
+        "name": "Monitoreo",
+        "ui": "698c1525239e3307",
+        "path": "/page2",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "default",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "698c1525239e3307",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": false
+    },
+    {
+        "id": "0840b1e6dc5dbe56",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@flowfuse/node-red-dashboard": "1.31.0"
+        }
+    }
+]
