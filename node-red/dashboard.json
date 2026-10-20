@@ -1,73 +1,76 @@
 [
     {
-        "id": "8f88068014262b5c",
+        "id": "84942d5dd80504a4",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "ESP32 bidireccional (SHT41 + LED)",
         "disabled": false,
-        "info": "",
+        "info": "Práctica Unidad 2 – Comunicación bidireccional ESP32 ↔ MQTT ↔ Node-RED.\n\nSensor → dashboard: sensor/sht41/temperatura, sensor/sht41/humedad\nDashboard → ESP32: actuador/led/set (ON/OFF, QoS 1, retained)\nConfirmación: actuador/led/estado\nConexión: esp32/status (online / offline vía LWT)",
         "env": []
     },
     {
-        "id": "56068ec7df0f16b8",
-        "type": "inject",
-        "z": "8f88068014262b5c",
-        "name": "simular_lectura",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "1",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 230,
-        "y": 560,
-        "wires": [
-            [
-                "79c7181cccbd055d"
-            ]
-        ]
+        "id": "7a4418157abbf2d6",
+        "type": "comment",
+        "z": "84942d5dd80504a4",
+        "name": "① Telemetría: ESP32 → Node-RED",
+        "info": "El ESP32 publica cada 2 s en topics independientes (valor numérico en texto plano).",
+        "x": 190,
+        "y": 40,
+        "wires": []
     },
     {
-        "id": "79c7181cccbd055d",
-        "type": "function",
-        "z": "8f88068014262b5c",
-        "name": "generar_datos_simulados",
-        "func": "msg.payload = \n{ \n    temp: +(20 + Math.random()*10).toFixed(1), \n    hum: +(40 + Math.random()*30).toFixed(1), \n    pres: +(1000 + Math.random()*30).toFixed(1), \n    iaq: Math.floor(Math.random()*150) \n}; \nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 230,
-        "y": 640,
-        "wires": [
-            [
-                "62cd10f1ea738d70",
-                "eba551661ee05a54",
-                "4564abc43e5559a9",
-                "f5cf513eecd07e4b",
-                "2412af6ad36c0710"
-            ]
-        ]
-    },
-    {
-        "id": "62cd10f1ea738d70",
-        "type": "ui-gauge",
-        "z": "8f88068014262b5c",
+        "id": "3814b34b4c11c680",
+        "type": "mqtt in",
+        "z": "84942d5dd80504a4",
         "name": "Temperatura",
-        "group": "0942303a585edd6d",
-        "order": 3,
-        "value": "payload.temp",
+        "topic": "sensor/sht41/temperatura",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "8b42908d76e08605",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 100,
+        "wires": [
+            [
+                "f579fea4ae0a685b",
+                "f36ae23da86d670b",
+                "5f2bb90708144e59"
+            ]
+        ]
+    },
+    {
+        "id": "5ad2445a9cbaacb7",
+        "type": "mqtt in",
+        "z": "84942d5dd80504a4",
+        "name": "Humedad",
+        "topic": "sensor/sht41/humedad",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "8b42908d76e08605",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 200,
+        "wires": [
+            [
+                "7954eba66abe5f42",
+                "e78ee792921690e0",
+                "5f2bb90708144e59"
+            ]
+        ]
+    },
+    {
+        "id": "f579fea4ae0a685b",
+        "type": "ui-gauge",
+        "z": "84942d5dd80504a4",
+        "name": "Temperatura",
+        "group": "29b53d0c0721f29f",
+        "order": 1,
+        "value": "payload",
         "valueType": "msg",
         "width": 3,
         "height": 3,
@@ -83,18 +86,24 @@
         "segments": [
             {
                 "from": "0",
+                "color": "#3584e4",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "18",
                 "color": "#5cd65c",
                 "text": "",
                 "textType": "label"
             },
             {
-                "from": "35",
+                "from": "28",
                 "color": "#ffc800",
                 "text": "",
                 "textType": "label"
             },
             {
-                "from": "42",
+                "from": "35",
                 "color": "#ea5353",
                 "text": "",
                 "textType": "label"
@@ -108,20 +117,82 @@
         "styleRounded": true,
         "styleGlow": false,
         "className": "",
-        "x": 490,
-        "y": 480,
+        "x": 520,
+        "y": 80,
         "wires": [
             []
         ]
     },
     {
-        "id": "eba551661ee05a54",
+        "id": "f36ae23da86d670b",
+        "type": "ui-chart",
+        "z": "84942d5dd80504a4",
+        "group": "29b53d0c0721f29f",
+        "name": "Tendencia de temperatura (°C)",
+        "label": "Tendencia de temperatura (°C)",
+        "order": 3,
+        "chartType": "line",
+        "category": "Temperatura",
+        "categoryType": "str",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "50",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 2,
+        "showLegend": false,
+        "removeOlder": "10",
+        "removeOlderUnit": "60",
+        "removeOlderPoints": "",
+        "colors": [
+            "#e66100",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5",
+            "#1f77b4"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 5,
+        "className": "",
+        "interpolation": "linear",
+        "x": 560,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7954eba66abe5f42",
         "type": "ui-gauge",
-        "z": "8f88068014262b5c",
+        "z": "84942d5dd80504a4",
         "name": "Humedad",
-        "group": "0942303a585edd6d",
+        "group": "29b53d0c0721f29f",
         "order": 2,
-        "value": "payload.hum",
+        "value": "payload",
         "valueType": "msg",
         "width": 3,
         "height": 3,
@@ -137,12 +208,24 @@
         "segments": [
             {
                 "from": "0",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "30",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "60",
                 "color": "#3584e4",
                 "text": "",
                 "textType": "label"
             }
         ],
-        "min": "0",
+        "min": 0,
         "max": "100",
         "sizeThickness": 16,
         "sizeGap": 4,
@@ -150,90 +233,24 @@
         "styleRounded": true,
         "styleGlow": false,
         "className": "",
-        "x": 480,
-        "y": 560,
+        "x": 510,
+        "y": 180,
         "wires": [
             []
         ]
     },
     {
-        "id": "4564abc43e5559a9",
-        "type": "ui-gauge",
-        "z": "8f88068014262b5c",
-        "name": "Calidad de aire (IAQ)",
-        "group": "0942303a585edd6d",
-        "order": 1,
-        "value": "payload.iaq",
-        "valueType": "msg",
-        "width": 3,
-        "height": 3,
-        "gtype": "gauge-half",
-        "gstyle": "needle",
-        "title": "Calidad de aire (IAQ)",
-        "alwaysShowTitle": false,
-        "floatingTitlePosition": "top-left",
-        "units": "IAQ",
-        "icon": "",
-        "prefix": "",
-        "suffix": "",
-        "segments": [
-            {
-                "from": "0",
-                "color": "#c061cb",
-                "text": "",
-                "textType": "label"
-            }
-        ],
-        "min": 0,
-        "max": "300",
-        "sizeThickness": 16,
-        "sizeGap": 4,
-        "sizeKeyThickness": 8,
-        "styleRounded": true,
-        "styleGlow": false,
-        "className": "",
-        "x": 520,
-        "y": 640,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "f5cf513eecd07e4b",
-        "type": "ui-text",
-        "z": "8f88068014262b5c",
-        "group": "0942303a585edd6d",
-        "order": 0,
-        "width": "3",
-        "height": "3",
-        "name": "Presion",
-        "label": "hPa",
-        "format": "{{msg.payload}}",
-        "layout": "col-center",
-        "style": true,
-        "font": "",
-        "fontSize": "30",
-        "color": "#241f31",
-        "wrapText": false,
-        "className": "",
-        "value": "payload.pres",
-        "valueType": "msg",
-        "x": 480,
-        "y": 720,
-        "wires": []
-    },
-    {
-        "id": "2412af6ad36c0710",
+        "id": "e78ee792921690e0",
         "type": "ui-chart",
-        "z": "8f88068014262b5c",
-        "group": "0942303a585edd6d",
-        "name": "Tendencia Temperatura",
-        "label": "Tendencia Temperatura",
-        "order": 9007199254740991,
+        "z": "84942d5dd80504a4",
+        "group": "29b53d0c0721f29f",
+        "name": "Tendencia de humedad (%)",
+        "label": "Tendencia de humedad (%)",
+        "order": 4,
         "chartType": "line",
-        "category": "Temperatura",
+        "category": "Humedad",
         "categoryType": "str",
-        "xAxisLabel": "Tiempo",
+        "xAxisLabel": "",
         "xAxisProperty": "",
         "xAxisPropertyType": "timestamp",
         "xAxisType": "time",
@@ -242,29 +259,29 @@
         "xmin": "",
         "xmax": "",
         "yAxisLabel": "",
-        "yAxisProperty": "payload.temp",
+        "yAxisProperty": "payload",
         "yAxisPropertyType": "msg",
         "ymin": "0",
-        "ymax": "50",
+        "ymax": "100",
         "bins": 10,
         "action": "append",
         "stackSeries": false,
         "pointShape": "circle",
-        "pointRadius": 4,
-        "showLegend": true,
+        "pointRadius": 2,
+        "showLegend": false,
         "removeOlder": "10",
         "removeOlderUnit": "60",
         "removeOlderPoints": "",
         "colors": [
-            "#ffa348",
-            "#ff0000",
+            "#3584e4",
             "#ff7f0e",
             "#2ca02c",
             "#a347e1",
             "#d62728",
             "#ff9896",
             "#9467bd",
-            "#c5b0d5"
+            "#c5b0d5",
+            "#1f77b4"
         ],
         "textColor": [
             "#666666"
@@ -275,20 +292,297 @@
         ],
         "gridColorDefault": true,
         "width": 6,
-        "height": 8,
+        "height": 5,
         "className": "",
         "interpolation": "linear",
-        "x": 530,
-        "y": 800,
+        "x": 550,
+        "y": 220,
         "wires": [
             []
         ]
     },
     {
-        "id": "0942303a585edd6d",
+        "id": "ca74301a64a5fc92",
+        "type": "comment",
+        "z": "84942d5dd80504a4",
+        "name": "② Control: Node-RED → ESP32 (con confirmación)",
+        "info": "El switch publica ON/OFF en actuador/led/set. Está desacoplado: solo cambia de posición cuando el ESP32 confirma el estado real en actuador/led/estado.",
+        "x": 230,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "6e511d09efd51f1e",
+        "type": "mqtt in",
+        "z": "84942d5dd80504a4",
+        "name": "Estado real del LED",
+        "topic": "actuador/led/estado",
+        "qos": "1",
+        "datatype": "utf8",
+        "broker": "8b42908d76e08605",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 380,
+        "wires": [
+            [
+                "66841106b746538e",
+                "57cce63583f9738a",
+                "5f2bb90708144e59"
+            ]
+        ]
+    },
+    {
+        "id": "66841106b746538e",
+        "type": "ui-switch",
+        "z": "84942d5dd80504a4",
+        "name": "Switch LED",
+        "label": "LED (GPIO 2)",
+        "group": "f425d254448f1f92",
+        "order": 1,
+        "width": 6,
+        "height": 1,
+        "passthru": false,
+        "decouple": "true",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-spread",
+        "clickableArea": "switch",
+        "onvalue": "ON",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "OFF",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "x": 470,
+        "y": 360,
+        "wires": [
+            [
+                "9f154cc7e4251cf7",
+                "5f2bb90708144e59"
+            ]
+        ]
+    },
+    {
+        "id": "9f154cc7e4251cf7",
+        "type": "mqtt out",
+        "z": "84942d5dd80504a4",
+        "name": "Comando LED",
+        "topic": "actuador/led/set",
+        "qos": "1",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "8b42908d76e08605",
+        "x": 700,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "57cce63583f9738a",
+        "type": "function",
+        "z": "84942d5dd80504a4",
+        "name": "Formato estado LED",
+        "func": "// Recibe la CONFIRMACION del ESP32 (actuador/led/estado) y la convierte\n// en un texto legible para el dashboard.\nconst estado = String(msg.payload).trim().toUpperCase();\nif (estado === \"ON\") {\n    msg.payload = \"🟢 ENCENDIDO\";\n} else if (estado === \"OFF\") {\n    msg.payload = \"⚫ APAGADO\";\n} else {\n    node.warn(\"Estado de LED desconocido: \" + msg.payload);\n    return null;\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 420,
+        "wires": [
+            [
+                "cca8edbd59ae8b40"
+            ]
+        ]
+    },
+    {
+        "id": "cca8edbd59ae8b40",
+        "type": "ui-text",
+        "z": "84942d5dd80504a4",
+        "group": "f425d254448f1f92",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "name": "Texto estado LED",
+        "label": "Estado del LED",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 730,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "3097f584242561c2",
+        "type": "comment",
+        "z": "84942d5dd80504a4",
+        "name": "③ Conexión del ESP32 (LWT)",
+        "info": "",
+        "x": 180,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "b92189701b5c3553",
+        "type": "mqtt in",
+        "z": "84942d5dd80504a4",
+        "name": "Estado ESP32",
+        "topic": "esp32/status",
+        "qos": "0",
+        "datatype": "utf8",
+        "broker": "8b42908d76e08605",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 560,
+        "wires": [
+            [
+                "60287592425d9ed9",
+                "5f2bb90708144e59"
+            ]
+        ]
+    },
+    {
+        "id": "60287592425d9ed9",
+        "type": "function",
+        "z": "84942d5dd80504a4",
+        "name": "Formato estado ESP32",
+        "func": "// esp32/status: \"online\" lo publica el ESP32 al conectarse;\n// \"offline\" lo publica el broker automaticamente (LWT) si el ESP32 se desconecta.\nconst estado = String(msg.payload).trim().toLowerCase();\nif (estado === \"online\") {\n    return [{ payload: \"🟢 En línea\" }, { payload: \"✅ ESP32 conectado\" }];\n}\nif (estado === \"offline\") {\n    // Salida 1: texto de estado. Salida 2: notificacion emergente.\n    return [{ payload: \"🔴 Desconectado\" }, { payload: \"⚠️ ESP32 desconectado: los valores mostrados ya no se actualizan\" }];\n}\nnode.warn(\"Estado de ESP32 desconocido: \" + msg.payload);\nreturn null;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 560,
+        "wires": [
+            [
+                "ac19999993e7b8a1"
+            ],
+            [
+                "406e362a886f71f7"
+            ]
+        ]
+    },
+    {
+        "id": "ac19999993e7b8a1",
+        "type": "ui-text",
+        "z": "84942d5dd80504a4",
+        "group": "f425d254448f1f92",
+        "order": 3,
+        "width": 6,
+        "height": 1,
+        "name": "Texto estado ESP32",
+        "label": "ESP32",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 660,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "406e362a886f71f7",
+        "type": "ui-notification",
+        "z": "84942d5dd80504a4",
+        "ui": "698c1525239e3307",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "5",
+        "showCountdown": true,
+        "outputs": 0,
+        "allowDismiss": true,
+        "dismissText": "Cerrar",
+        "raw": false,
+        "className": "",
+        "name": "Aviso de conexión",
+        "x": 660,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "5f2bb90708144e59",
+        "type": "debug",
+        "z": "84942d5dd80504a4",
+        "name": "Depuración MQTT",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 930,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "8b42908d76e08605",
+        "type": "mqtt-broker",
+        "name": "Mosquitto local",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "29b53d0c0721f29f",
         "type": "ui-group",
-        "name": "Ambiente",
-        "page": "06afa48dc3702ec2",
+        "name": "Ambiente (SHT41)",
+        "page": "a54cbc05e2b54840",
         "width": 6,
         "height": 1,
         "order": 1,
@@ -299,14 +593,48 @@
         "groupType": "default"
     },
     {
-        "id": "06afa48dc3702ec2",
+        "id": "f425d254448f1f92",
+        "type": "ui-group",
+        "name": "Control y estado",
+        "page": "a54cbc05e2b54840",
+        "width": 6,
+        "height": 1,
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "698c1525239e3307",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": false
+    },
+    {
+        "id": "a54cbc05e2b54840",
         "type": "ui-page",
-        "name": "Monitoreo",
+        "name": "Monitoreo y control",
         "ui": "698c1525239e3307",
-        "path": "/page2",
+        "path": "/practica-u2",
         "icon": "home",
         "layout": "grid",
-        "theme": "default",
+        "theme": "0d1e5b7fbe993be9",
         "breakpoints": [
             {
                 "name": "Default",
@@ -335,27 +663,26 @@
         "disabled": "false"
     },
     {
-        "id": "698c1525239e3307",
-        "type": "ui-base",
-        "name": "My Dashboard",
-        "path": "/dashboard",
-        "appIcon": "",
-        "includeClientData": true,
-        "acceptsClientConfig": [
-            "ui-notification",
-            "ui-control"
-        ],
-        "showPathInSidebar": false,
-        "headerContent": "page",
-        "navigationStyle": "default",
-        "titleBarStyle": "default",
-        "showReconnectNotification": true,
-        "notificationDisplayTime": 1,
-        "showDisconnectNotification": true,
-        "allowInstall": false
+        "id": "0d1e5b7fbe993be9",
+        "type": "ui-theme",
+        "name": "Tema IoT",
+        "colors": {
+            "surface": "#2c3e50",
+            "primary": "#e66100",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "6px",
+            "widgetGap": "12px"
+        }
     },
     {
-        "id": "0840b1e6dc5dbe56",
+        "id": "adab43345c76ad7c",
         "type": "global-config",
         "env": [],
         "modules": {
