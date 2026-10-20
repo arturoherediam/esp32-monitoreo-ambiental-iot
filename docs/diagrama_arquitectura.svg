@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="940" viewBox="0 0 1400 940" font-family="DejaVu Sans, Arial, sans-serif">
+<defs>
+<marker id="mtel" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1c71d8"/></marker>
+<marker id="mctl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e66100"/></marker>
+<marker id="msta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#813d9c"/></marker>
+<marker id="mgry" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#555"/></marker>
+</defs>
+<rect width="1400" height="940" fill="#fff"/>
+<text x="40" y="46" font-size="24" font-weight="bold" fill="#1a1a1a">Arquitectura IoT y comunicación MQTT — Práctica U2</text>
+<text x="40" y="72" font-size="14" fill="#555">Comunicación bidireccional ESP32 ↔ Mosquitto ↔ Node-RED · red local aislada (hotspot de la laptop)</text>
+<rect x="40" y="110" width="300" height="470" rx="10" fill="#eef3fb" stroke="#1f3a5f" stroke-width="2"/>
+<text x="190" y="140" font-size="17" font-weight="bold" fill="#1f3a5f" text-anchor="middle">Nodo ESP32</text>
+<text x="190" y="160" font-size="12" font-weight="normal" fill="#555" text-anchor="middle">DevKit V1 · firmware PlatformIO</text>
+<text x="56" y="186" font-size="12" font-weight="bold" fill="#222" text-anchor="start">Cliente:</text>
+<text x="120" y="186" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">esp32-sht41</text>
+<text x="56" y="206" font-size="12" font-weight="bold" fill="#222" text-anchor="start">Usuario:</text>
+<text x="120" y="206" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">esp32_user</text>
+<text x="56" y="226" font-size="12" font-weight="bold" fill="#222" text-anchor="start">IP:</text>
+<text x="120" y="226" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">10.42.0.x (DHCP)</text>
+<text x="56" y="246" font-size="12" font-weight="bold" fill="#222" text-anchor="start">Keepalive:</text>
+<text x="136" y="246" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">15 s</text>
+<rect x="54" y="266" width="272" height="82" rx="6" fill="#fff" stroke="#1c71d8" stroke-width="2"/>
+<text x="68" y="288" font-size="13" font-weight="bold" fill="#1c71d8" text-anchor="start">Sensor SHT41 (I²C 0x44)</text>
+<text x="68" y="308" font-size="12" font-weight="normal" fill="#333" text-anchor="start">Temperatura y humedad</text>
+<text x="68" y="325" font-size="12" font-weight="normal" fill="#333" text-anchor="start">lectura cada 2 s</text>
+<rect x="54" y="360" width="272" height="82" rx="6" fill="#fff" stroke="#333" stroke-width="2"/>
+<text x="68" y="382" font-size="13" font-weight="bold" fill="#333" text-anchor="start">OLED SSD1306 (I²C 0x3C)</text>
+<text x="68" y="402" font-size="12" font-weight="normal" fill="#333" text-anchor="start">Valor alterno temp./hum.</text>
+<text x="68" y="419" font-size="12" font-weight="normal" fill="#333" text-anchor="start">+ estado LED:ON / LED:OFF</text>
+<rect x="54" y="454" width="272" height="106" rx="6" fill="#fff" stroke="#e66100" stroke-width="2"/>
+<text x="68" y="476" font-size="13" font-weight="bold" fill="#e66100" text-anchor="start">LED en GPIO 2 (actuador)</text>
+<text x="68" y="496" font-size="12" font-weight="normal" fill="#333" text-anchor="start">Callback MQTT: ON/OFF</text>
+<text x="68" y="513" font-size="12" font-weight="normal" fill="#333" text-anchor="start">→ digitalWrite(GPIO 2)</text>
+<text x="68" y="530" font-size="12" font-weight="normal" fill="#333" text-anchor="start">→ confirma el estado real</text>
+<circle cx="306" cy="476" r="11" fill="#e66100"/>
+<text x="306" y="480.5" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">3</text>
+<rect x="590" y="96" width="790" height="690" rx="14" fill="#fafafa" stroke="#888" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="608" y="122" font-size="15" font-weight="bold" fill="#333" text-anchor="start">Laptop Linux</text>
+<text x="720" y="122" font-size="12" font-weight="normal" fill="#555" text-anchor="start">· hotspot WiFi «ESP32-Proyecto» (WPA2) · wlp3s0 = 10.42.0.1</text>
+<rect x="630" y="140" width="270" height="610" rx="10" fill="#f3eefa" stroke="#813d9c" stroke-width="2"/>
+<text x="765.0" y="170" font-size="17" font-weight="bold" fill="#813d9c" text-anchor="middle">Broker MQTT</text>
+<text x="765.0" y="190" font-size="12" font-weight="normal" fill="#555" text-anchor="middle">Mosquitto 2.0 · puerto 1883/TCP</text>
+<text x="646" y="220" font-size="12" font-weight="normal" fill="#222" text-anchor="start">• allow_anonymous false</text>
+<text x="646" y="239" font-size="12" font-weight="normal" fill="#222" text-anchor="start">• password_file (usuario/contraseña)</text>
+<text x="646" y="258" font-size="12" font-weight="normal" fill="#222" text-anchor="start">• acl_file (permisos por rol)</text>
+<text x="646" y="287" font-size="12" font-weight="bold" fill="#222" text-anchor="start">Mensajes retenidos (retain):</text>
+<text x="658" y="306" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">actuador/led/set</text>
+<text x="658" y="324" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">actuador/led/estado</text>
+<text x="658" y="342" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">esp32/status</text>
+<line x1="644" y1="362" x2="886" y2="362" stroke="#d5c8e8"/>
+<text x="646" y="380" font-size="13" font-weight="bold" fill="#813d9c" text-anchor="start">ACL por rol</text>
+<text x="646" y="404" font-size="12" font-weight="bold" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">esp32_user (ESP32)</text>
+<rect x="656" y="410" width="18" height="16" rx="3" fill="#1c71d8"/>
+<text x="665" y="423" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">W</text>
+<text x="682" y="422" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">sensor/sht41/#</text>
+<rect x="656" y="428" width="18" height="16" rx="3" fill="#1c71d8"/>
+<text x="665" y="441" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">W</text>
+<text x="682" y="440" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">actuador/led/estado</text>
+<rect x="656" y="446" width="18" height="16" rx="3" fill="#1c71d8"/>
+<text x="665" y="459" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">W</text>
+<text x="682" y="458" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">esp32/status</text>
+<rect x="656" y="464" width="18" height="16" rx="3" fill="#2e7d32"/>
+<text x="665" y="477" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">R</text>
+<text x="682" y="476" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">actuador/led/set</text>
+<text x="646" y="502" font-size="12" font-weight="bold" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">dashboard (Node-RED)</text>
+<rect x="656" y="508" width="18" height="16" rx="3" fill="#2e7d32"/>
+<text x="665" y="521" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">R</text>
+<text x="682" y="520" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">sensor/#</text>
+<rect x="656" y="526" width="18" height="16" rx="3" fill="#2e7d32"/>
+<text x="665" y="539" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">R</text>
+<text x="682" y="538" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">actuador/led/estado</text>
+<rect x="656" y="544" width="18" height="16" rx="3" fill="#2e7d32"/>
+<text x="665" y="557" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">R</text>
+<text x="682" y="556" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">esp32/status</text>
+<rect x="656" y="562" width="18" height="16" rx="3" fill="#1c71d8"/>
+<text x="665" y="575" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">W</text>
+<text x="682" y="574" font-size="12" font-weight="normal" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">actuador/led/set</text>
+<text x="646" y="604" font-size="11" font-weight="normal" fill="#555" text-anchor="start">W = publicar · R = suscribirse</text>
+<line x1="644" y1="622" x2="886" y2="622" stroke="#d5c8e8"/>
+<text x="646" y="642" font-size="13" font-weight="bold" fill="#813d9c" text-anchor="start">Last Will and Testament (LWT)</text>
+<text x="646" y="664" font-size="12" font-weight="normal" fill="#222" text-anchor="start">Si el ESP32 no envía nada en</text>
+<text x="646" y="682" font-size="12" font-weight="normal" fill="#222" text-anchor="start">1.5 × keepalive (≈ 22 s), el broker</text>
+<text x="646" y="700" font-size="12" font-weight="normal" fill="#222" text-anchor="start">publica esp32/status = &quot;offline&quot;.</text>
+<line x1="344" y1="190" x2="626" y2="190" stroke="#1c71d8" stroke-width="2.5" marker-end="url(#mtel)"/>
+<text x="475.0" y="182" font-size="12.5" font-weight="bold" fill="#1c71d8" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">sensor/sht41/temperatura</text>
+<text x="475.0" y="207" font-size="11" font-weight="normal" fill="#444" text-anchor="middle">"24.6"  ·  QoS 0  ·  cada 2 s</text>
+<line x1="344" y1="252" x2="626" y2="252" stroke="#1c71d8" stroke-width="2.5" marker-end="url(#mtel)"/>
+<text x="475.0" y="244" font-size="12.5" font-weight="bold" fill="#1c71d8" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">sensor/sht41/humedad</text>
+<text x="475.0" y="269" font-size="11" font-weight="normal" fill="#444" text-anchor="middle">"58.0"  ·  QoS 0  ·  cada 2 s</text>
+<line x1="344" y1="314" x2="626" y2="314" stroke="#1c71d8" stroke-width="2.5" marker-end="url(#mtel)"/>
+<text x="475.0" y="306" font-size="12.5" font-weight="bold" fill="#1c71d8" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">sensor/sht41</text>
+<text x="475.0" y="331" font-size="11" font-weight="normal" fill="#444" text-anchor="middle">{"temp","hum"}  ·  compat. v1.0</text>
+<line x1="344" y1="376" x2="626" y2="376" stroke="#e66100" stroke-width="2.5" marker-end="url(#mctl)"/>
+<text x="475.0" y="368" font-size="12.5" font-weight="bold" fill="#e66100" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">actuador/led/estado</text>
+<text x="475.0" y="393" font-size="11" font-weight="normal" fill="#444" text-anchor="middle">"ON" / "OFF"  ·  retain</text>
+<line x1="344" y1="438" x2="626" y2="438" stroke="#813d9c" stroke-width="2.5" marker-end="url(#msta)"/>
+<text x="475.0" y="430" font-size="12.5" font-weight="bold" fill="#813d9c" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">esp32/status</text>
+<text x="475.0" y="455" font-size="11" font-weight="normal" fill="#444" text-anchor="middle">"online" · LWT "offline"  ·  retain</text>
+<line x1="626" y1="524" x2="344" y2="524" stroke="#e66100" stroke-width="2.5" marker-end="url(#mctl)"/>
+<text x="475.0" y="516" font-size="12.5" font-weight="bold" fill="#e66100" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">actuador/led/set</text>
+<text x="475.0" y="541" font-size="11" font-weight="normal" fill="#444" text-anchor="middle">"ON" / "OFF"  ·  QoS 1  ·  retain</text>
+<circle cx="575.0" cy="363" r="11" fill="#e66100"/>
+<text x="575.0" y="367.5" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">4</text>
+<circle cx="565.0" cy="511" r="11" fill="#e66100"/>
+<text x="565.0" y="515.5" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">2</text>
+<text x="475.0" y="600" font-size="12" font-weight="bold" fill="#333" text-anchor="middle">WiFi 2.4 GHz (WPA2)</text>
+<text x="475.0" y="617" font-size="11" font-weight="normal" fill="#555" text-anchor="middle">TCP 1883 · usuario/contraseña</text>
+<rect x="1080" y="140" width="280" height="330" rx="10" fill="#fdf1e6" stroke="#8f3b0b" stroke-width="2"/>
+<text x="1220.0" y="170" font-size="17" font-weight="bold" fill="#8f3b0b" text-anchor="middle">Node-RED</text>
+<text x="1220.0" y="190" font-size="12" font-weight="normal" fill="#555" text-anchor="middle">+ Dashboard 2.0 · usuario: dashboard</text>
+<text x="1096" y="224" font-size="12" font-weight="bold" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">mqtt in ×4</text>
+<text x="1108" y="241" font-size="12" font-weight="normal" fill="#333" text-anchor="start">→ gauges, tendencias, textos</text>
+<text x="1096" y="263" font-size="12" font-weight="bold" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">function</text>
+<text x="1108" y="280" font-size="12" font-weight="normal" fill="#333" text-anchor="start">→ formato de estados (ES)</text>
+<text x="1096" y="302" font-size="12" font-weight="bold" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">ui-switch</text>
+<text x="1108" y="319" font-size="12" font-weight="normal" fill="#333" text-anchor="start">desacoplado: solo se mueve</text>
+<text x="1108" y="341" font-size="12" font-weight="normal" fill="#333" text-anchor="start">con la confirmación del ESP32</text>
+<text x="1096" y="363" font-size="12" font-weight="bold" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">mqtt out</text>
+<text x="1108" y="380" font-size="12" font-weight="normal" fill="#333" text-anchor="start">→ actuador/led/set</text>
+<text x="1096" y="402" font-size="12" font-weight="bold" fill="#222" text-anchor="start" font-family="DejaVu Sans Mono, Consolas, monospace">ui-notification</text>
+<text x="1108" y="419" font-size="12" font-weight="normal" fill="#333" text-anchor="start">→ aviso si el ESP32 cae</text>
+<line x1="904" y1="250" x2="1076" y2="250" stroke="#1c71d8" stroke-width="2.5" marker-end="url(#mtel)"/>
+<text x="990.0" y="176" font-size="11" font-weight="bold" fill="#444" text-anchor="middle">suscribe:</text>
+<text x="990.0" y="194" font-size="11" font-weight="normal" fill="#1c71d8" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">sensor/sht41/temperatura</text>
+<text x="990.0" y="210" font-size="11" font-weight="normal" fill="#1c71d8" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">sensor/sht41/humedad</text>
+<text x="990.0" y="226" font-size="11" font-weight="normal" fill="#e66100" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">actuador/led/estado</text>
+<text x="990.0" y="242" font-size="11" font-weight="normal" fill="#813d9c" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">esp32/status</text>
+<circle cx="990.0" cy="272" r="11" fill="#e66100"/>
+<text x="990.0" y="276.5" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">5</text>
+<line x1="1076" y1="400" x2="904" y2="400" stroke="#e66100" stroke-width="2.5" marker-end="url(#mctl)"/>
+<text x="990.0" y="390" font-size="11" font-weight="bold" fill="#444" text-anchor="middle">publica:</text>
+<text x="990.0" y="422" font-size="11" font-weight="normal" fill="#e66100" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">actuador/led/set</text>
+<text x="990.0" y="438" font-size="11" font-weight="normal" fill="#444" text-anchor="middle">QoS 1 · retain</text>
+<circle cx="990.0" cy="364" r="11" fill="#e66100"/>
+<text x="990.0" y="368.5" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">1</text>
+<rect x="1080" y="560" width="280" height="190" rx="10" fill="#eef7ee" stroke="#2e7d32" stroke-width="2"/>
+<text x="1220.0" y="588" font-size="15" font-weight="bold" fill="#2e7d32" text-anchor="middle">Usuario · navegador</text>
+<text x="1220.0" y="607" font-size="11" font-weight="normal" fill="#555" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace">localhost:1880/dashboard/practica-u2</text>
+<text x="1098" y="636" font-size="12" font-weight="normal" fill="#222" text-anchor="start">• Gauges de temperatura y humedad</text>
+<text x="1098" y="657" font-size="12" font-weight="normal" fill="#222" text-anchor="start">• Tendencias (últimos 10 min)</text>
+<text x="1098" y="678" font-size="12" font-weight="normal" fill="#222" text-anchor="start">• Switch del LED (GPIO 2)</text>
+<text x="1098" y="699" font-size="12" font-weight="normal" fill="#222" text-anchor="start">• Estado real del LED</text>
+<text x="1098" y="720" font-size="12" font-weight="normal" fill="#222" text-anchor="start">• Estado del ESP32 (en línea / LWT)</text>
+<line x1="1220.0" y1="474" x2="1220.0" y2="556" stroke="#555" stroke-width="2.5" marker-start="url(#mgry)" marker-end="url(#mgry)"/>
+<text x="1232.0" y="511.0" font-size="12" font-weight="bold" fill="#333" text-anchor="start">HTTP + WebSocket</text>
+<text x="1232.0" y="528.0" font-size="11" font-weight="normal" fill="#555" text-anchor="start">puerto 1880</text>
+<text x="40" y="812" font-size="15" font-weight="bold" fill="#1a1a1a" text-anchor="start">Ciclo de control con confirmación</text>
+<circle cx="51" cy="838" r="11" fill="#e66100"/>
+<text x="51" y="842.5" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">1</text>
+<text x="70" y="843" font-size="12.5" font-weight="normal" fill="#222" text-anchor="start">El usuario mueve el switch → Node-RED publica &quot;ON&quot; en actuador/led/set (QoS 1, retain).</text>
+<circle cx="51" cy="866" r="11" fill="#e66100"/>
+<text x="51" y="870.5" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">2</text>
+<text x="70" y="871" font-size="12.5" font-weight="normal" fill="#222" text-anchor="start">Mosquitto entrega el comando al ESP32, suscrito a actuador/led/set.</text>
+<circle cx="51" cy="894" r="11" fill="#e66100"/>
+<text x="51" y="898.5" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">3</text>
+<text x="70" y="899" font-size="12.5" font-weight="normal" fill="#222" text-anchor="start">El ESP32 enciende GPIO 2 y actualiza la OLED (LED:ON).</text>
+<circle cx="731" cy="838" r="11" fill="#e66100"/>
+<text x="731" y="842.5" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">4</text>
+<text x="750" y="843" font-size="12.5" font-weight="normal" fill="#222" text-anchor="start">El ESP32 confirma publicando &quot;ON&quot; en actuador/led/estado (retain).</text>
+<circle cx="731" cy="866" r="11" fill="#e66100"/>
+<text x="731" y="870.5" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">5</text>
+<text x="750" y="871" font-size="12.5" font-weight="normal" fill="#222" text-anchor="start">Node-RED recibe la confirmación: el switch y «Estado del LED» reflejan el estado real.</text>
+<line x1="760" y1="894" x2="790" y2="894" stroke="#1c71d8" stroke-width="3"/>
+<text x="798" y="899" font-size="12" font-weight="normal" fill="#222" text-anchor="start">Telemetría</text>
+<line x1="950" y1="894" x2="980" y2="894" stroke="#e66100" stroke-width="3"/>
+<text x="988" y="899" font-size="12" font-weight="normal" fill="#222" text-anchor="start">Control del LED</text>
+<line x1="1140" y1="894" x2="1170" y2="894" stroke="#813d9c" stroke-width="3"/>
+<text x="1178" y="899" font-size="12" font-weight="normal" fill="#222" text-anchor="start">Conexión (LWT)</text>
+</svg>
