@@ -1,0 +1,29 @@
+\section{Problemas Encontrados y Soluciones}
+
+Durante el desarrollo del sistema se superaron diversos desafíos técnicos que se resumen en la Tabla~\ref{tab:problemas_solucion}.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{3.8cm} p{5.2cm} X}
+\toprule
+\textbf{Problema Observado} & \textbf{Causa Raíz} & \textbf{Solución Implementada} \\
+\midrule
+Lecturas erróneas ($0^\circ\text{C}$) en sensor BME680 inicial & Falla interna en silicio: registro \texttt{adc\_T} en cero permanente & Sustitución por sensor industrial Sensirion GY-SHT41 (I²C). \\
+\addlinespace
+ESP32 retenido en reset al abrir monitor serie & Líneas DTR/RTS del convertidor USB (CH9102/CH343) forzaban pin EN & Configuración de \texttt{monitor\_rts = 0} y \texttt{monitor\_dtr = 0} en \texttt{platformio.ini}. \\
+\addlinespace
+ESP32 publica en MQTT pero Node-RED no recibe nada & Mosquitto descartaba tópicos en silencio por reglas ACL no actualizadas & Definición de reglas ACL por rol para \texttt{esp32\_user} y \texttt{dashboard} en \texttt{/etc/mosquitto/acl}. \\
+\addlinespace
+Nodos MQTT en Node-RED en \textit{"connecting"} tras importar & Flujo exportado omite credenciales por política de seguridad & Captura manual de usuario y contraseña en el nodo \texttt{Mosquitto local}. \\
+\addlinespace
+Colisión de URL en Dashboard 2.0 & Ruta \texttt{/monitoreo} ya utilizada en otra página & Reasignación de ruta a \texttt{/dashboard/practica-u2}. \\
+\addlinespace
+Bloqueo de escáner I²C en terminal & Cable jumper flojo forzaba línea SDA/SCL a tierra & Reemplazo de cable y aislamiento módulo por módulo. \\
+\addlinespace
+Desconexión de ESP32 al cambiar de red en laptop & La laptop apagaba el hotspot al asociarse a otra Wi-Fi & Asignación de IP fija \texttt{10.42.0.1/24} y reactivación unívoca con \texttt{nmcli}. \\
+\bottomrule
+\end{tabularx}
+\caption{Problemas encontrados, causas y soluciones de ingeniería.}
+\label{tab:problemas_solucion}
+\end{table}

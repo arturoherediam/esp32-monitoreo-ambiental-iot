@@ -1,0 +1,16 @@
+\section{Conclusiones}
+
+\subsection{Conclusiones de la Práctica}
+\begin{enumerate}[noitemsep]
+    \item \textbf{Cumplimiento de la Comunicación Bidireccional:} Se validó exitosamente el intercambio simultáneo de telemetría ascendente (temperatura y humedad cada 2 segundos) y comandos descendentes de control (encendido/apagado del LED en GPIO 2) mediante MQTT sobre broker Mosquitto.
+    \item \textbf{Robustez del Desacoplamiento de Estado:} El control en lazo cerrado implementado en Node-RED demostró que condicionar la interfaz gráfica a la confirmación real física (\texttt{actuador/led/estado}) previene discrepancias de estado si el dispositivo se apaga o pierde conectividad.
+    \item \textbf{Detección Eficiente de Fallas con LWT:} La función Last Will and Testament permitió que el broker reporte automáticamente la desconexión del ESP32 sin necesidad de sobrecargar la red con mecanismos de sondeo continuo (\textit{polling}).
+    \item \textbf{Programación No Bloqueante:} El uso de temporizadores cooperativos con \texttt{millis()} garantizó que las tareas locales (lectura de sensor y pantalla OLED) continúen ejecutándose fluidamente aun durante cortes o reconexiones de red.
+\end{enumerate}
+
+\subsection{Trabajo Futuro y Escalabilidad}
+\begin{itemize}[noitemsep]
+    \item \textbf{Migración a Nodo Autónomo Dedicado:} Trasladar Mosquitto y Node-RED de la laptop a una placa de bajo consumo (ej. \textbf{Orange Pi Zero 3}) que funcione como Access Point permanente y salida Ethernet hacia la red local.
+    \item \textbf{Control de Cargas de Potencia:} Sustituir el LED por módulos de relé electromecánicos para control de ventilación o climatización (HVAC) con lógica automatizada en Node-RED.
+    \item \textbf{Acceso Remoto Seguro:} Configurar una red privada virtual moderna tipo malla (\textbf{Tailscale} o \textbf{WireGuard}) para supervisión fuera de la red local sin exponer puertos a Internet.
+\end{itemize}

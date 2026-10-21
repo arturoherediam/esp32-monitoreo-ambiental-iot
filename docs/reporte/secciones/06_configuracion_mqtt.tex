@@ -1,0 +1,45 @@
+\section{Configuración MQTT y Seguridad}
+
+\subsection{Parámetros del Broker MQTT}
+En la Tabla~\ref{tab:config_broker} se detallan los parámetros de conexión del broker de mensajería implementado.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l p{4.5cm} X}
+\toprule
+\textbf{Parámetro} & \textbf{Valor} & \textbf{Descripción / Uso} \\
+\midrule
+\textbf{Software Broker} & Eclipse Mosquitto v2.0.x & Servidor de mensajería MQTT en GNU/Linux. \\
+\textbf{Dirección IP} & \texttt{10.42.0.1} (WLAN) / \texttt{localhost} & IP del servidor para el ESP32 y para Node-RED. \\
+\textbf{Puerto} & \texttt{1883/TCP} & Puerto estándar para tráfico MQTT en texto plano. \\
+\textbf{Acceso Anónimo} & Desactivado (\texttt{allow\_anonymous false}) & Requiere autenticación por usuario y contraseña. \\
+\textbf{Usuarios del Sistema} & \texttt{esp32\_user} y \texttt{dashboard} & Roles diferenciados para nodo de campo y servidor web. \\
+\bottomrule
+\end{tabularx}
+\caption{Parámetros de configuración del broker MQTT.}
+\label{tab:config_broker}
+\end{table}
+
+\subsection{Autenticación y Credenciales}
+En el archivo \texttt{/etc/mosquitto/conf.d/local.conf} se establecieron las directivas de escucha y autenticación:
+\begin{lstlisting}[style=custombash]
+listener 1883 0.0.0.0
+allow_anonymous false
+password_file /etc/mosquitto/passwd
+acl_file /etc/mosquitto/acl
+\end{lstlisting}
+Los usuarios se dieron de alta mediante \texttt{sudo mosquitto\_passwd /etc/mosquitto/passwd <usuario>}.
+
+\subsection{Control de Acceso por Roles (ACL) y Firewall}
+\begin{itemize}
+    \item \proyectoBadge \textbf{Listas de Control de Acceso (ACL):} En \texttt{/etc/mosquitto/acl} se delimitaron los privilegios mínimos para aislar funciones:
+    \begin{itemize}[noitemsep]
+        \item \texttt{esp32\_user}: Permiso de escritura en \texttt{sensor/sht41/\#}, \texttt{actuador/led/estado} y \texttt{esp32/status}; permiso de lectura únicamente en \texttt{actuador/led/set}.
+        \item \texttt{dashboard}: Permiso de lectura en \texttt{sensor/\#}, \texttt{actuador/led/estado} y \texttt{esp32/status}; permiso de escritura únicamente en \texttt{actuador/led/set}.
+    \end{itemize}
+    \item \proyectoBadge \textbf{Regla de Firewall UFW:} Se limitó el acceso al puerto 1883 exclusivamente a la subred del proyecto:
+    \begin{lstlisting}[style=custombash]
+sudo ufw allow from 10.42.0.0/24 to any port 1883 proto tcp
+    \end{lstlisting}
+\end{itemize}

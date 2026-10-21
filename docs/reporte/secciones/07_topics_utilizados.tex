@@ -1,0 +1,32 @@
+\section{Topics Utilizados y Estructura de Mensajes}
+
+\subsection{Matriz de Tópicos MQTT}
+En la Tabla~\ref{tab:topicos_mqtt} se resumen los tópicos implementados, su dirección, formato de payload, nivel de QoS y bandera de retención.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{4.2cm} c c c p{2.2cm} X}
+\toprule
+\textbf{Tópico MQTT} & \textbf{Flujo} & \textbf{QoS} & \textbf{Ret.} & \textbf{Payload} & \textbf{Propósito / Función} \\
+\midrule
+\texttt{sensor/sht41/temperatura} & ESP32 $\to$ NR & 0 & No & \texttt{"24.6"} & Lectura de temperatura en $^\circ\text{C}$ (texto ASCII). \\
+\texttt{sensor/sht41/humedad} & ESP32 $\to$ NR & 0 & No & \texttt{"58.0"} & Lectura de humedad en $\%$ (texto ASCII). \\
+\texttt{actuador/led/set} & NR $\to$ ESP32 & 1 & Sí & \texttt{ON} / \texttt{OFF} & Comando de conmutación emitido por el switch. \\
+\texttt{actuador/led/estado} & ESP32 $\to$ NR & 0 & Sí & \texttt{ON} / \texttt{OFF} & Confirmación del estado real físico del LED. \\
+\texttt{esp32/status} & ESP32/Brk $\to$ NR & 0 & Sí & \texttt{online}/\texttt{offline} & Supervisión de conexión y alerta LWT. \\
+\midrule
+\multicolumn{6}{l}{\proyectoBadge \textbf{Tópico de compatibilidad del proyecto base:}} \\
+\texttt{sensor/sht41} & ESP32 $\to$ NR & 0 & No & JSON & \texttt{\{"temp":24.6,"hum":58.0\}} (retrocompatibilidad). \\
+\bottomrule
+\end{tabularx}
+\caption{Especificación técnica de tópicos MQTT del sistema.}
+\label{tab:topicos_mqtt}
+\end{table}
+
+\subsection{Estructura de Payloads y Calidad de Servicio (QoS)}
+\begin{itemize}[noitemsep]
+    \item \practicaBadge \textbf{Tópicos independientes en texto plano:} Los valores de temperatura (\texttt{"24.6"}) y humedad (\texttt{"58.0"}) se envían como cadenas atómicas simples para su consumo directo en los medidores radiales (\textit{gauges}) sin sobrecarga de decodificación.
+    \item \practicaBadge \textbf{Comandos del actuador:} El tópico \texttt{actuador/led/set} emplea \textbf{QoS 1} para garantizar la entrega del comando y bandera \textbf{Retain = true} para que el microcontrolador recupere el último estado configurado si se reinicia.
+    \item \practicaBadge \textbf{Confirmación de estado:} El tópico \texttt{actuador/led/estado} devuelve la confirmación con bandera retenida para que nuevos clientes web sincronicen de inmediato el estado del interruptor.
+\end{itemize}

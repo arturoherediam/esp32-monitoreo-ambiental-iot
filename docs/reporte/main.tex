@@ -1,0 +1,163 @@
+\documentclass[11pt,letterpaper]{article}
+
+% ==============================================================================
+% PAQUETES Y CONFIGURACIÓN BÁSICA
+% ==============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[letterpaper,top=2.2cm,bottom=2.2cm,left=2.2cm,right=2.2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs,tabularx,array,multirow}
+\usepackage{listings}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{hyperref}
+
+% ==============================================================================
+% DEFINICIÓN DE COLORES
+% ==============================================================================
+\definecolor{primaryBlue}{HTML}{1A365D}
+\definecolor{secondaryBlue}{HTML}{2B6CB0}
+\definecolor{accentOrange}{HTML}{DD6B20}
+\definecolor{darkGray}{HTML}{2D3748}
+\definecolor{lightGray}{HTML}{F8FAFC}
+\definecolor{borderGray}{HTML}{E2E8F0}
+\definecolor{tagPractice}{HTML}{2B6CB0}
+\definecolor{tagProject}{HTML}{4A5568}
+
+% ==============================================================================
+% CONFIGURACIÓN DE HYPERREF
+% ==============================================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=secondaryBlue,
+    citecolor=primaryBlue,
+    urlcolor=secondaryBlue,
+    pdfauthor={Arturo Heredia, Diego Lopez},
+    pdftitle={Reporte Técnico: Comunicación Bidireccional ESP32 y Node-RED vía MQTT},
+    pdfsubject={Práctica Unidad 2: IoT Bidireccional},
+    pdfkeywords={IoT, ESP32, MQTT, Node-RED, Mosquitto, Bidireccional}
+}
+
+% ==============================================================================
+% ENCABEZADOS Y PIES DE PÁGINA
+% ==============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{darkGray}\textit{ESP32 $\longleftrightarrow$ Mosquitto $\longleftrightarrow$ Node-RED (MQTT Bidireccional)}}
+\fancyhead[R]{\small\color{darkGray}\textit{Práctica U2}}
+\fancyfoot[L]{\small\color{darkGray}Arturo Heredia, Diego López}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ==============================================================================
+% CONFIGURACIÓN DE LISTINGS (CÓDIGO FUENTE)
+% ==============================================================================
+\lstdefinestyle{customcpp}{
+    backgroundcolor=\color{lightGray},
+    basicstyle=\ttfamily\scriptsize\color{darkGray},
+    keywordstyle=\bfseries\color{primaryBlue},
+    commentstyle=\itshape\color{gray},
+    stringstyle=\color{accentOrange},
+    numbers=none,
+    tabsize=2,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{borderGray},
+    xleftmargin=6pt,
+    framexleftmargin=6pt
+}
+
+\lstdefinestyle{custombash}{
+    backgroundcolor=\color{lightGray},
+    basicstyle=\ttfamily\scriptsize\color{darkGray},
+    keywordstyle=\bfseries\color{secondaryBlue},
+    commentstyle=\itshape\color{gray},
+    stringstyle=\color{accentOrange},
+    frame=single,
+    rulecolor=\color{borderGray},
+    breaklines=true,
+    showstringspaces=false,
+    xleftmargin=6pt,
+    framexleftmargin=6pt
+}
+
+\lstset{style=customcpp}
+
+% ==============================================================================
+% CAJAS Y DISTINTIVOS
+% ==============================================================================
+\newtcolorbox{infobox}[1][]{
+    colback=lightGray,
+    colframe=secondaryBlue,
+    arc=2mm,
+    boxrule=0.8pt,
+    title=#1,
+    coltitle=white,
+    fonttitle=\bfseries\small,
+    left=3mm, right=3mm, top=2mm, bottom=2mm
+}
+
+\newcommand{\practicaBadge}{\textbf{\color{tagPractice}[Requerimiento Práctica] }}
+\newcommand{\proyectoBadge}{\textbf{\color{tagProject}[Contexto de Proyecto] }}
+
+% ==============================================================================
+% CUERPO PRINCIPAL DEL DOCUMENTO
+% ==============================================================================
+\begin{document}
+
+% 1. PORTADA
+\input{secciones/00_portada.tex}
+
+% ÍNDICE COMPACTO
+\newpage
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+% 2. OBJETIVO
+\input{secciones/01_objetivo.tex}
+
+% 3. MATERIALES
+\input{secciones/02_materiales.tex}
+
+% 4. DIAGRAMA DE CONEXIÓN
+\input{secciones/03_diagrama_conexion.tex}
+
+% 5. ARQUITECTURA DEL SISTEMA
+\input{secciones/04_arquitectura_sistema.tex}
+
+% 6. DESCRIPCIÓN DEL FUNCIONAMIENTO
+\input{secciones/05_descripcion_funcionamiento.tex}
+
+% 7. CONFIGURACIÓN MQTT
+\input{secciones/06_configuracion_mqtt.tex}
+
+% 8. TOPICS UTILIZADOS
+\input{secciones/07_topics_utilizados.tex}
+
+% 9. EXPLICACIÓN GENERAL DEL CÓDIGO
+\input{secciones/08_explicacion_codigo.tex}
+
+% 10. EVIDENCIAS
+\input{secciones/09_evidencias.tex}
+
+% 11. PROBLEMAS ENCONTRADOS Y SOLUCIÓN
+\input{secciones/10_problemas_solucion.tex}
+
+% 12. CONCLUSIONES
+\input{secciones/11_conclusiones.tex}
+
+\end{document}

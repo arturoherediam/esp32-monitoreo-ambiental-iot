@@ -1,0 +1,71 @@
+\section{Explicación General del Código}
+
+\subsection{Firmware del Microcontrolador ESP32}
+El firmware (\texttt{firmware/esp32-monitoreo-ambiental/src/main.cpp}) opera mediante temporizadores basados en \texttt{millis()}, evitando bloqueos por \texttt{delay()}.
+
+\subsubsection{1. Conexión con LWT y Suscripción a Comandos}
+\begin{lstlisting}[style=customcpp]
+bool conectarMQTT() {
+  // LWT: registra testamento "offline" en esp32/status
+  bool ok = mqttClient.connect(MQTT_CLIENT_ID, MQTT_USER, MQTT_PASSWORD,
+                               TOPIC_STATUS, 0, true, "offline");
+  if (!ok) return false;
+
+  mqttClient.publish(TOPIC_STATUS, "online", true);
+  mqttClient.publish(TOPIC_LED_ESTADO, ledEncendido ? "ON" : "OFF", true);
+  mqttClient.subscribe(TOPIC_LED_SET, 1); // Suscripcion a comandos con QoS 1
+  return true;
+}
+\end{lstlisting}
+
+\subsubsection{2. Callback de Recepción y Control con Confirmación}
+\begin{lstlisting}[style=customcpp]
+void callbackMQTT(char* topic, byte* payload, unsigned int length) {
+  char msg[16];
+  unsigned int n = min(length, (unsigned int)(sizeof(msg) - 1));
+  for (unsigned int i = 0; i < n; i++) msg[i] = toupper((char)payload[i]);
+  msg[n] = '\0';
+
+  if (strcmp(topic, TOPIC_LED_SET) == 0) {
+    if (strcmp(msg, "ON") == 0) aplicarLed(true);
+    else if (strcmp(msg, "OFF") == 0) aplicarLed(false);
+  }
+}
+
+void aplicarLed(bool encender) {
+  ledEncendido = encender;
+  digitalWrite(LED_PIN, encender ? HIGH : LOW); // Conmutacion fisica en GPIO 2
+
+  if (mqttClient.connected()) {
+    // Confirmacion de lazo cerrado (retained) hacia Node-RED
+    mqttClient.publish(TOPIC_LED_ESTADO, encender ? "ON" : "OFF", true);
+  }
+  actualizarOled(); // Refresco in situ en la pantalla OLED
+}
+\end{lstlisting}
+
+\subsubsection{3. Muestreo Periódico y Publicación de Telemetría}
+\begin{lstlisting}[style=customcpp]
+void leerYPublicar() {
+  sensors_event_t hum_ev, temp_ev;
+  if (!sht4.getEvent(&hum_ev, &temp_ev)) return;
+  temperaturaActual = temp_ev.temperature;
+  humedadActual = hum_ev.relative_humidity;
+
+  if (!mqttClient.connected()) return;
+
+  char val[12];
+  snprintf(val, sizeof(val), "%.1f", temperaturaActual);
+  mqttClient.publish(TOPIC_TEMPERATURA, val); // sensor/sht41/temperatura
+  snprintf(val, sizeof(val), "%.1f", humedadActual);
+  mqttClient.publish(TOPIC_HUMEDAD, val);     // sensor/sht41/humedad
+}
+\end{lstlisting}
+
+\subsection{Flujo en Node-RED (\texttt{node-red/dashboard.json})}
+El flujo de Node-RED se estructura en tres bloques funcionales:
+\begin{enumerate}[noitemsep]
+    \item \textbf{Telemetría ambiental:} Nodos \texttt{mqtt in} conectados a los tópicos individuales de temperatura y humedad, vinculados a dos medidores \texttt{ui-gauge} (rango $0$--$50^\circ\text{C}$ y $0$--$100\%$) y dos gráficas \texttt{ui-chart} de tendencia histórica (últimos 10 minutos).
+    \item \textbf{Control del actuador LED (desacoplado):} El nodo \texttt{ui-switch} publica en \texttt{actuador/led/set} mediante un nodo \texttt{mqtt out} (QoS 1, retain). Un nodo \texttt{mqtt in} escucha \texttt{actuador/led/estado} y alimenta la entrada del switch para actualizar su posición real, además de un nodo \texttt{ui-text} que muestra \texttt{"ENCENDIDO"} o \texttt{"APAGADO"}.
+    \item \textbf{Supervisión LWT:} Nodo \texttt{mqtt in} para \texttt{esp32/status} que actualiza el indicador de presencia (\texttt{"🟢 En línea"} / \texttt{"🔴 Desconectado"}) y genera una notificación emergente mediante \texttt{ui-notification} si el dispositivo cae.
+\end{enumerate}

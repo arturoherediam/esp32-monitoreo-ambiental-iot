@@ -1,0 +1,40 @@
+\section{Objetivo}
+
+\subsection{Objetivo de la Práctica}
+Desarrollar un sistema IoT que establezca una \textbf{comunicación bidireccional} entre una placa \textbf{ESP32} y una interfaz en \textbf{Node-RED} utilizando el protocolo \textbf{MQTT}:
+\begin{itemize}[noitemsep]
+    \item \textbf{Sentido ascendente (ESP32 $\to$ Node-RED):} Adquisición periódica y publicación de temperatura y humedad ambiental hacia tópicos independientes.
+    \item \textbf{Sentido descendente (Node-RED $\to$ ESP32):} Envío de comandos remotos desde un Dashboard web para conmutar un actuador (LED) y confirmación de su estado real.
+\end{itemize}
+
+\subsection{Relación con el Proyecto Base y Alcance}
+\begin{itemize}[noitemsep]
+    \item \practicaBadge Comunicación bidireccional MQTT, publicación de variables de temperatura y humedad, control de LED con confirmación de estado, broker Mosquitto y Dashboard gráfico en Node-RED.
+    \item \proyectoBadge El sistema forma parte de un monitor de confort térmico que complementa la práctica integrando una pantalla local OLED (SSD1306), sensor I²C de alta precisión SHT41 (sustituto del DHT11 y relevo del BME680 inicial), y control de acceso por roles (ACL).
+\end{itemize}
+
+\subsection{Requerimientos Funcionales}
+En la Tabla~\ref{tab:req_funcionales} se resume el cumplimiento de los 10 requerimientos funcionales solicitados.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{c p{6.0cm} X c}
+\toprule
+\textbf{\#} & \textbf{Requerimiento de la Práctica} & \textbf{Implementación} & \textbf{Estado} \\
+\midrule
+1 & Conexión de ESP32 a Wi-Fi & Modo estación (\texttt{WIFI\_STA}) en hotspot local WPA2 & \textbf{Cumplido} \\
+2 & Comunicación con broker MQTT & Cliente \texttt{PubSubClient} con autenticación en puerto 1883 & \textbf{Cumplido} \\
+3 & Obtención de temperatura y humedad & Sensor ambiental digital con lecturas cada 2 s & \textbf{Cumplido} \\
+4 & Publicación de valores vía MQTT & Tópicos dedicados \texttt{sensor/sht41/temperatura} y \texttt{humedad} & \textbf{Cumplido} \\
+5 & Recepción y visualización en Node-RED & Nodos \texttt{mqtt in} conectados a Mosquitto (\texttt{localhost}) & \textbf{Cumplido} \\
+6 & Interfaz gráfica (Dashboard) & Gauges analógicos y tendencias temporales en Dashboard 2.0 & \textbf{Cumplido} \\
+7 & Comando para controlar el LED & Switch web que publica en \texttt{actuador/led/set} (QoS 1, retain) & \textbf{Cumplido} \\
+8 & Recepción del comando en ESP32 & Callback asíncrono MQTT que decodifica órdenes \texttt{ON}/\texttt{OFF} & \textbf{Cumplido} \\
+9 & Conmutación física del LED & \texttt{digitalWrite(GPIO 2)} con encendido simultáneo de onboard & \textbf{Cumplido} \\
+10 & Comunicación bidireccional & Lazo cerrado con confirmación en \texttt{actuador/led/estado} y LWT & \textbf{Cumplido} \\
+\bottomrule
+\end{tabularx}
+\caption{Matriz de cumplimiento de requerimientos funcionales.}
+\label{tab:req_funcionales}
+\end{table}
